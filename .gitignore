@@ -1,0 +1,8 @@
+.vs/
+bin/
+obj/
+AppPackages/
+BundleArtifacts/
+*.user
+
+TeamsWP.API/Environment.cs
