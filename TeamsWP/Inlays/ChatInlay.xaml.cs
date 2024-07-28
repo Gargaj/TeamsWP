@@ -102,6 +102,7 @@ namespace TeamsWP.Inlays
       public string TimestampString => Timestamp.HasValue ? (Timestamp.Value.Date == DateTime.Now.Date ? Timestamp.Value.ToString("HH:mm") : Timestamp.Value.ToString("yyyy-MM-dd HH:mm")) : string.Empty;
       public DateTime? Timestamp { get; set; }
       public string Text { get; set; }
+      public RichTextControls.Generators.IHtmlXamlGenerator HTMLGenerator { get { return new TeamsHTMLGenerator(Text); } }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

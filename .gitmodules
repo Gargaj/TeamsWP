@@ -1,0 +1,3 @@
+[submodule "Externals/UWP-RichTextControls"]
+	path = Externals/UWP-RichTextControls
+	url = https://github.com/ryanvalentin/UWP-RichTextControls.git

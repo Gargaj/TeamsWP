@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamsWP", "TeamsWP\TeamsWP.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamsWP.API", "TeamsWP.API\TeamsWP.API.csproj", "{7EA295A7-2F43-451B-9118-E9E5C51FF235}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichTextControls", "Externals\UWP-RichTextControls\RichTextControls\RichTextControls\RichTextControls.csproj", "{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,26 @@ Global
 		{7EA295A7-2F43-451B-9118-E9E5C51FF235}.Release|x64.Build.0 = Release|x64
 		{7EA295A7-2F43-451B-9118-E9E5C51FF235}.Release|x86.ActiveCfg = Release|x86
 		{7EA295A7-2F43-451B-9118-E9E5C51FF235}.Release|x86.Build.0 = Release|x86
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|ARM.Build.0 = Debug|ARM
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|x64.ActiveCfg = Debug|x64
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|x64.Build.0 = Debug|x64
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|x86.ActiveCfg = Debug|x86
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Debug|x86.Build.0 = Debug|x86
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|ARM.ActiveCfg = Release|ARM
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|ARM.Build.0 = Release|ARM
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|ARM64.Build.0 = Release|Any CPU
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|x64.ActiveCfg = Release|x64
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|x64.Build.0 = Release|x64
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|x86.ActiveCfg = Release|x86
+		{E3BD6F6F-B39E-4180-8182-DFE85C780BF4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

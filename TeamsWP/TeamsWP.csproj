@@ -139,6 +139,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TeamsHTMLGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -199,6 +200,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Externals\UWP-RichTextControls\RichTextControls\RichTextControls\RichTextControls.csproj">
+      <Project>{e3bd6f6f-b39e-4180-8182-dfe85c780bf4}</Project>
+      <Name>RichTextControls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TeamsWP.API\TeamsWP.API.csproj">
       <Project>{7ea295a7-2f43-451b-9118-e9e5c51ff235}</Project>
       <Name>TeamsWP.API</Name>

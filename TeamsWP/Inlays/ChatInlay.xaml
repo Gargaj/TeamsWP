@@ -7,6 +7,7 @@
     xmlns:bwpcp="using:BlueWP.Controls.Post"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:richText="using:RichTextControls"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -22,10 +23,10 @@
         <DataTemplate>
           <StackPanel Orientation="Vertical" Margin="0,0,0,10">
             <TextBlock>
-            <Run Text="{Binding Sender}" FontWeight="Bold"/>
-            <Run Text="{Binding TimestampString}" FontSize="10"/>
+              <Run Text="{Binding Sender}" FontWeight="Bold"/>
+              <Run Text="{Binding TimestampString}" FontSize="10"/>
             </TextBlock>
-            <TextBlock Text="{Binding Text}" TextWrapping="WrapWholeWords"/>
+            <richText:HtmlTextBlock Html="{Binding Text}" CustomGenerator="{Binding HTMLGenerator}" Margin="10,0,0,0"/>
           </StackPanel>
         </DataTemplate>
       </ListView.ItemTemplate>
