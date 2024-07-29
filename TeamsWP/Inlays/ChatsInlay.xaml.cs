@@ -43,8 +43,10 @@ namespace TeamsWP.Inlays
       if (responseChats != null)
       {
         Chats = responseChats.value.Select(s => new Chat() {
+          App = _app,
           ID = s.id,
-          Name = !string.IsNullOrEmpty(s.topic) ? s.topic : string.Join(", ", s.members.Where(m=>m.userId != _mainPage.CurrentUserInfo.id).Select(m => m.displayName))
+          ChatData = s,
+          CurrentUserInfo = _mainPage.CurrentUserInfo,
         }).ToList();
         OnPropertyChanged(nameof(Chats));
       }
@@ -63,8 +65,23 @@ namespace TeamsWP.Inlays
 
     public class Chat
     {
+      public App App { get; set; }
       public string ID { get; set; }
-      public string Name { get; set; }
+      public string Name => !string.IsNullOrEmpty(ChatData.topic) ? ChatData.topic : string.Join(", ", ChatPartners.Select(m => m.displayName));
+      public string ChatImageURL {
+        get
+        {
+          if (ChatData.chatType == "oneOnOne")
+          {
+            return App.Client.GraphEndpointRoot + FirstChatPartner.AvatarURL;
+          }
+          return string.Empty;
+        }
+      }
+      public API.Commands.Chat.ListChats.Response.Chat.Member FirstChatPartner => ChatPartners.FirstOrDefault();
+      public IEnumerable<API.Commands.Chat.ListChats.Response.Chat.Member> ChatPartners => ChatData.members.Where(m => m.userId != CurrentUserInfo.id);
+      public API.Commands.User.Me.Response CurrentUserInfo { get; set; }
+      public API.Commands.Chat.ListChats.Response.Chat ChatData { get; set; }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

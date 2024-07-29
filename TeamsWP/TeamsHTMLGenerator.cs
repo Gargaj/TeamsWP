@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml.Documents;
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 
 namespace TeamsWP
 {
@@ -14,10 +16,30 @@ namespace TeamsWP
     {
     }
 
+    protected override UIElement GenerateImage(AngleSharp.Dom.Html.IHtmlImageElement node)
+    {
+      if (node.Source.StartsWith("https://graph.microsoft.com"))
+      {
+        return new Controls.TeamsImage()
+        {
+          TeamsURL = node.Source,
+          Width = node.DisplayWidth,
+          Height = node.DisplayHeight,
+        };
+      }
+
+      return base.GenerateImage(node);
+    }
+
     protected override Inline GenerateInlineForNode(AngleSharp.Dom.INode node, InlineCollection inlines)
     {
       switch (node.NodeName)
       {
+        case "AT":
+          {
+            // TODO
+          }
+          break;
         case "EMOJI":
           {
             var element = node as AngleSharp.Dom.IElement;
@@ -31,6 +53,19 @@ namespace TeamsWP
           break;
       }
       return base.GenerateInlineForNode(node, inlines);
+    }
+
+    protected override UIElement GenerateUIElementForNode(AngleSharp.Dom.INode node, UIElementCollection elements)
+    {
+      switch (node.NodeName)
+      {
+        case "ATTACHMENT":
+          {
+            // TODO
+          }
+          break;
+      }
+      return base.GenerateUIElementForNode(node, elements);
     }
   }
 }

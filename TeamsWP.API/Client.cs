@@ -15,7 +15,7 @@ namespace TeamsWP.API
   {
     private readonly string AuthEndpoint = "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize";
     private readonly string TokenEndpoint = "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token";
-    private readonly string GraphEndpointRoot = "https://graph.microsoft.com/v1.0";
+    public readonly string GraphEndpointRoot = "https://graph.microsoft.com/v1.0";
     private readonly string RedirectURI = "https://login.microsoftonline.com/common/oauth2/nativeclient";
 
     private readonly string Tenant = "organizations";
@@ -34,6 +34,8 @@ namespace TeamsWP.API
       "Team.Create",
       "Team.ReadBasic.All",
       "User.Read",
+      "User.ReadBasic.All",
+      "User.ReadWrite",
     };
 
     private Settings _settings = new Settings();

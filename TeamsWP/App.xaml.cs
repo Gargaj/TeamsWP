@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace TeamsWP
 {
-  sealed partial class App : Application
+  public sealed partial class App : Application
   {
     private API.Client _client = new API.Client();
     private Frame _rootFrame;

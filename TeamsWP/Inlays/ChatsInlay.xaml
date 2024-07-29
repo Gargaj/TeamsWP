@@ -2,9 +2,8 @@
     x:Class="TeamsWP.Inlays.ChatsInlay"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:BlueWP.Inlays"
-    xmlns:bwc="using:BlueWP.Controls"
-    xmlns:bwpcp="using:BlueWP.Controls.Post"
+    xmlns:local="using:TeamsWP.Inlays"
+    xmlns:twc="using:TeamsWP.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -15,8 +14,8 @@
     <ListView.ItemTemplate>
       <DataTemplate>
         <StackPanel Orientation="Horizontal">
-          <!-- TODO: avatar-->
-          <TextBlock Text="{Binding Name}"/>
+          <twc:TeamsImage TeamsURL="{Binding ChatImageURL}" Width="32" Height="32" Margin="0,0,10,0"/>
+          <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
         </StackPanel>
       </DataTemplate>
     </ListView.ItemTemplate>

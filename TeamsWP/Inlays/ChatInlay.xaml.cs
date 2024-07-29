@@ -67,6 +67,7 @@ namespace TeamsWP.Inlays
         {
           ID = s?.id,
           Sender = s?.from?.user?.displayName ?? "[unknown]",
+          SenderImageURL = _app.Client.GraphEndpointRoot + s?.from?.user?.AvatarURL,
           Text = s?.body?.content ?? "[unknown]",
           Timestamp = s?.createdDateTime
         })
@@ -74,7 +75,7 @@ namespace TeamsWP.Inlays
       Messages = Messages.OrderBy(s => s.Timestamp).ToList();
 
       OnPropertyChanged(nameof(Messages));
-      listView.ScrollIntoView(Messages.Last());
+      listView.ScrollIntoView(Messages.LastOrDefault());
     }
 
     private async void Send_Click(object sender, RoutedEventArgs e)
@@ -91,6 +92,7 @@ namespace TeamsWP.Inlays
 
       if (response != null)
       {
+        MessageText = string.Empty;
         AddNewMessages(new List<API.Commands.Types.Message>() { response });
       }
     }
@@ -99,6 +101,7 @@ namespace TeamsWP.Inlays
     {
       public string ID { get; set; }
       public string Sender { get; set; }
+      public string SenderImageURL { get; set; }
       public string TimestampString => Timestamp.HasValue ? (Timestamp.Value.Date == DateTime.Now.Date ? Timestamp.Value.ToString("HH:mm") : Timestamp.Value.ToString("yyyy-MM-dd HH:mm")) : string.Empty;
       public DateTime? Timestamp { get; set; }
       public string Text { get; set; }

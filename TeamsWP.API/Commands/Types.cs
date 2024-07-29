@@ -8,12 +8,12 @@ namespace TeamsWP.API.Commands
 {
   public class Types
   {
-    public class User
+    public class UserBasic
     {
       public string id;
       public string displayName;
-      public string userId;
-      public string email;
+
+      public string AvatarURL => $"/users/{id}/photo/$value";
     }
     public class Body
     {
@@ -24,13 +24,13 @@ namespace TeamsWP.API.Commands
     {
       public string application;
       public string device;
-      public User user;
+      public UserBasic user;
     }
     public class Reaction
     {
       public string reactionType;
       public DateTime createdDateTime;
-      public User user;
+      public UserBasic user;
     }
     public class Attachment
     {

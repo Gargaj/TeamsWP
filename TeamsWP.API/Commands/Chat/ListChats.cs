@@ -43,6 +43,9 @@ namespace TeamsWP.API.Commands.Chat
 
     public class Response : IResponse
     {
+      [JsonProperty("@odata.nextLink")]
+      public string _odataNextLink;
+
       public List<Chat> value;
 
       public class Chat
@@ -55,13 +58,24 @@ namespace TeamsWP.API.Commands.Chat
         public ChatViewpoint chatViewpoint;
         public string tenantID;
         public string webUrl;
-        public List<Types.User> members;
+        public List<Member> members;
         public Types.Message lastMessagePreview;
 
         public class ChatViewpoint
         {
           public bool isHidden;
           public DateTime lastMessageReadDateTime;
+        }
+
+        public class Member
+        {
+          public string id;
+          public List<string> roles;
+          public string displayName;
+          public string userId;
+          public string email;
+
+          public string AvatarURL => $"/users/{userId}/photo/$value";
         }
       }
     }
