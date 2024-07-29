@@ -13,6 +13,7 @@ namespace TeamsWP.Inlays
   {
     private App _app;
     private Pages.MainPage _mainPage;
+    private DispatcherTimer _updateTimer = new DispatcherTimer();
 
     public ChatInlay()
     {
@@ -20,6 +21,9 @@ namespace TeamsWP.Inlays
       _app = (App)Application.Current;
       Loaded += ChatInlay_Loaded;
       DataContext = this;
+
+      _updateTimer.Interval = TimeSpan.FromSeconds(10);
+      _updateTimer.Tick += async (s, e) => { await Update(); };
     }
 
     public string ID { get; set; }
@@ -34,16 +38,24 @@ namespace TeamsWP.Inlays
     public void Flush()
     {
       Messages.Clear();
+      _updateTimer.Stop();
     }
 
     public async Task Refresh()
+    {
+      _mainPage?.StartLoading();
+      await Update();
+      _mainPage?.EndLoading();
+
+      _updateTimer.Start();
+    }
+
+    public async Task Update()
     {
       if (string.IsNullOrEmpty(ID))
       {
         return;
       }
-
-      _mainPage?.StartLoading();
 
       var responseMessages = await _mainPage.Get<API.Commands.Chat.ListChatMessages.Response>(new API.Commands.Chat.ListChatMessages
       {
@@ -54,8 +66,6 @@ namespace TeamsWP.Inlays
       {
         AddNewMessages(responseMessages.value);
       }
-
-      _mainPage?.EndLoading();
     }
 
     private void AddNewMessages(IEnumerable<API.Commands.Types.Message> newMessages)
@@ -75,6 +85,7 @@ namespace TeamsWP.Inlays
       Messages = Messages.OrderBy(s => s.Timestamp).ToList();
 
       OnPropertyChanged(nameof(Messages));
+      listView.UpdateLayout();
       listView.ScrollIntoView(Messages.LastOrDefault());
     }
 
