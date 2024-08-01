@@ -37,7 +37,8 @@ namespace TeamsWP.Inlays
 
       var responseChats = await _mainPage.Get<API.Commands.Chat.ListChats.Response>(new API.Commands.Chat.ListChats
       {
-        retrieveMembers = true
+        retrieveMembers = true,
+        retrieveLastMessagePreview = true,
       });
 
       if (responseChats != null)
@@ -47,7 +48,7 @@ namespace TeamsWP.Inlays
           ID = s.id,
           ChatData = s,
           CurrentUserInfo = _mainPage.CurrentUserInfo,
-        }).ToList();
+        }).OrderByDescending(s=>s?.ChatData?.lastMessagePreview?.createdDateTime ?? s.ChatData.lastUpdatedDateTime).ToList();
         OnPropertyChanged(nameof(Chats));
       }
 
@@ -68,6 +69,8 @@ namespace TeamsWP.Inlays
       public App App { get; set; }
       public string ID { get; set; }
       public string Name => !string.IsNullOrEmpty(ChatData.topic) ? ChatData.topic : string.Join(", ", ChatPartners.Select(m => m.displayName));
+      public bool IsRead => ChatData.viewpoint == null || ChatData.lastMessagePreview == null || ChatData.viewpoint.lastMessageReadDateTime >= ChatData.lastMessagePreview.createdDateTime;
+      public Windows.UI.Text.FontWeight IsReadWeight => IsRead ? Windows.UI.Text.FontWeights.Normal : Windows.UI.Text.FontWeights.Bold;
       public string ChatImageURL {
         get
         {

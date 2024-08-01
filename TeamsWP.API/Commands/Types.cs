@@ -12,6 +12,7 @@ namespace TeamsWP.API.Commands
     {
       public string id;
       public string displayName;
+      public string userIdentityType;
 
       public string AvatarURL => $"/users/{id}/photo/$value";
     }

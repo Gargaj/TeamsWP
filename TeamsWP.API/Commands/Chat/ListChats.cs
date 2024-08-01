@@ -55,16 +55,24 @@ namespace TeamsWP.API.Commands.Chat
         public DateTime createdDateTime;
         public DateTime lastUpdatedDateTime;
         public string chatType;
-        public ChatViewpoint chatViewpoint;
+        public Viewpoint viewpoint;
+        public OnlineMeetingInfo onlineMeetingInfo;
         public string tenantID;
         public string webUrl;
         public List<Member> members;
         public Types.Message lastMessagePreview;
 
-        public class ChatViewpoint
+        public class Viewpoint
         {
           public bool isHidden;
           public DateTime lastMessageReadDateTime;
+        }
+
+        public class OnlineMeetingInfo
+        {
+          public object calendarEventId;
+          public string joinWebUrl;
+          public Types.UserBasic organizer;
         }
 
         public class Member

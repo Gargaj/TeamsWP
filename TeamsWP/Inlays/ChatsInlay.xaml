@@ -6,6 +6,8 @@
     xmlns:twc="using:TeamsWP.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:c="using:Microsoft.Xaml.Interactions.Core"
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
@@ -15,7 +17,7 @@
       <DataTemplate>
         <StackPanel Orientation="Horizontal">
           <twc:TeamsImage TeamsURL="{Binding ChatImageURL}" Width="32" Height="32" Margin="0,0,10,0"/>
-          <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+          <TextBlock Text="{Binding Name}" VerticalAlignment="Center" FontWeight="{Binding IsReadWeight}"/>
         </StackPanel>
       </DataTemplate>
     </ListView.ItemTemplate>
