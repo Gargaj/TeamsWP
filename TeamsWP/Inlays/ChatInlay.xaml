@@ -13,11 +13,14 @@
 
   <Grid>
     <Grid.RowDefinitions>
+      <RowDefinition Height="32"/>
       <RowDefinition Height="*"/>
       <RowDefinition Height="32"/>
     </Grid.RowDefinitions>
-    
-    <ListView Grid.Row="0" ItemsSource="{Binding Messages}" HorizontalContentAlignment="Stretch" x:Name="listView">
+
+    <TextBlock Grid.Row="0" Text="{Binding ChatName}" FontSize="16" FontWeight="Bold" Margin="5,3,0,0"/>
+
+    <ListView Grid.Row="1" ItemsSource="{Binding Messages}" HorizontalContentAlignment="Stretch" x:Name="listView">
       <ListView.ItemTemplate>
         <DataTemplate>
           <StackPanel Orientation="Vertical" Margin="0,0,0,10">
@@ -41,7 +44,7 @@
         </DataTemplate>
       </ListView.ItemTemplate>
     </ListView>
-    <Grid Grid.Row="1">
+    <Grid Grid.Row="2">
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*"/>
         <ColumnDefinition Width="48"/>

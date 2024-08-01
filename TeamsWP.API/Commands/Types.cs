@@ -77,5 +77,44 @@ namespace TeamsWP.API.Commands
 
       public bool isDeleted;
     }
+
+    public class Chat
+    {
+      public string id;
+      public string topic;
+      public DateTime createdDateTime;
+      public DateTime lastUpdatedDateTime;
+      public string chatType;
+      public Viewpoint viewpoint;
+      public OnlineMeetingInfo onlineMeetingInfo;
+      public string tenantID;
+      public string webUrl;
+      public List<Member> members;
+      public Message lastMessagePreview;
+
+      public class Viewpoint
+      {
+        public bool isHidden;
+        public DateTime lastMessageReadDateTime;
+      }
+
+      public class OnlineMeetingInfo
+      {
+        public object calendarEventId;
+        public string joinWebUrl;
+        public UserBasic organizer;
+      }
+
+      public class Member
+      {
+        public string id;
+        public List<string> roles;
+        public string displayName;
+        public string userId;
+        public string email;
+
+        public string AvatarURL => $"/users/{userId}/photo/$value";
+      }
+    }
   }
 }

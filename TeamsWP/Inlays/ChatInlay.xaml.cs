@@ -30,6 +30,7 @@ namespace TeamsWP.Inlays
     public string ID { get; set; }
     public ObservableCollection<Message> Messages { get; private set; } = new ObservableCollection<Message>();
     public string MessageText { get; set; }
+    public string ChatName { get; set; }
 
     private void ChatInlay_Loaded(object sender, RoutedEventArgs e)
     {
@@ -38,6 +39,7 @@ namespace TeamsWP.Inlays
 
     public void Flush()
     {
+      ChatName = string.Empty;
       Messages.Clear();
       _updateTimer.Stop();
     }
@@ -46,6 +48,14 @@ namespace TeamsWP.Inlays
     {
       _mainPage?.StartLoading();
       await Update();
+
+      var responseChatInfo = await _mainPage.Get<API.Commands.Chat.GetChat.Response>(new API.Commands.Chat.GetChat
+      {
+        id = ID
+      });
+      ChatName = !string.IsNullOrEmpty(responseChatInfo.topic) ? responseChatInfo.topic : string.Join(", ", responseChatInfo.members.Where(m => m.userId != _mainPage.CurrentUserInfo.id).Select(m => m.displayName));
+      OnPropertyChanged(nameof(ChatName));
+
       _mainPage?.EndLoading();
 
       _updateTimer.Start();

@@ -122,6 +122,7 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="Commands\Channel\ListAllChannels.cs" />
+    <Compile Include="Commands\Chat\GetChat.cs" />
     <Compile Include="Commands\Chat\SendChatMessage.cs" />
     <Compile Include="Commands\Chat\ListChatMessages.cs" />
     <Compile Include="Commands\Chat\ListChats.cs" />
