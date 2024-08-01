@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
@@ -27,7 +28,7 @@ namespace TeamsWP.Inlays
     }
 
     public string ID { get; set; }
-    public List<Message> Messages { get; private set; } = new List<Message>();
+    public ObservableCollection<Message> Messages { get; private set; } = new ObservableCollection<Message>();
     public string MessageText { get; set; }
 
     private void ChatInlay_Loaded(object sender, RoutedEventArgs e)
@@ -68,21 +69,27 @@ namespace TeamsWP.Inlays
       }
     }
 
-    private void AddNewMessages(IEnumerable<API.Commands.Types.Message> newMessages)
+    private void AddNewMessages(IEnumerable<API.Commands.Types.Message> messageBurst)
     {
-      Messages.AddRange(
-        newMessages
-        .Where(s => s.deletedDateTime == null && !Messages.Any(m => m.ID == s.id))
-        .Select(s => new Message()
+      var newMessages = messageBurst.Where(s => s.deletedDateTime == null && !Messages.Any(m => m.ID == s.id));
+      if (!newMessages.Any())
+      {
+        return;
+      }
+
+      foreach (var message in newMessages)
+      {
+        var insertionItem = Messages.FirstOrDefault(s => s.Timestamp > message?.createdDateTime);
+        var idx = Messages.IndexOf(insertionItem);
+        Messages.Insert(idx < 0 ? Messages.Count : idx, new Message()
         {
-          ID = s?.id,
-          Sender = s?.from?.user?.displayName ?? "[unknown]",
-          SenderImageURL = _app.Client.GraphEndpointRoot + s?.from?.user?.AvatarURL,
-          Text = s?.body?.content ?? "[unknown]",
-          Timestamp = s?.createdDateTime
-        })
-      );
-      Messages = Messages.OrderBy(s => s.Timestamp).ToList();
+          ID = message?.id,
+          Sender = message?.from?.user?.displayName ?? "[unknown]",
+          SenderImageURL = _app.Client.GraphEndpointRoot + message?.from?.user?.AvatarURL,
+          Text = message?.body?.content ?? "[unknown]",
+          Timestamp = message?.createdDateTime
+        });
+      }
 
       OnPropertyChanged(nameof(Messages));
       listView.UpdateLayout();
