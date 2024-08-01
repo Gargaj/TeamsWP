@@ -84,7 +84,7 @@ namespace TeamsWP.Controls
       {
         responseStream = await http.DoHTTPRequestStreamAsync(TeamsURL, new byte[] { }, headers, "GET");
       }
-      catch (WebException ex)
+      catch (WebException)
       {
         //var error = ex.Response != null ? await new StreamReader(ex.Response.GetResponseStream()).ReadToEndAsync() : ex.ToString();
         return null;
@@ -99,6 +99,7 @@ namespace TeamsWP.Controls
     }
 
     private static Dictionary<string, BitmapImageStatus> _cache = new Dictionary<string, BitmapImageStatus>();
+    private string _lastSubbedURL = string.Empty;
 
     private async Task RenderDocument()
     {
@@ -110,28 +111,44 @@ namespace TeamsWP.Controls
       var teamsURL = TeamsURL; // Store locally to avoid raciness
       if (string.IsNullOrEmpty(teamsURL))
       {
+        _image.Source = null;
         return;
       }
+
+      _image.Tag = teamsURL;
 
       BitmapImage bitmapImage = null;
       bool needsDownload = false;
       lock (_cache)
       {
+        // It's possible that the image gets "reused", so if it's already waiting on something, cancel that
+        if (_cache.ContainsKey(_lastSubbedURL))
+        {
+          _cache[_lastSubbedURL].DownloadFinished -= OnUpdateImage;
+          _lastSubbedURL = string.Empty;
+        }
+
         if (_cache.ContainsKey(teamsURL))
         {
           // If image not downloaded, sign up for "download finished" event
-          bitmapImage = _cache[teamsURL].BitmapImage;
           if (!_cache[teamsURL].IsDownloadFinished)
           {
+            _image.Source = null;
             _cache[teamsURL].DownloadFinished += OnUpdateImage;
+            _lastSubbedURL = teamsURL;
+            return;
           }
+          bitmapImage = _cache[teamsURL].BitmapImage;
         }
         else
         {
           // We're the first here, kick off a download (use a flag since we can't await in a lock)
           needsDownload = true;
-          bitmapImage = new BitmapImage();
+          bitmapImage = new BitmapImage() {
+            CreateOptions = BitmapCreateOptions.IgnoreImageCache
+          };
           _cache.Add(teamsURL, new BitmapImageStatus() {
+            URL = teamsURL,
             BitmapImage = bitmapImage,
             IsDownloadFinished = false
           });
@@ -140,26 +157,22 @@ namespace TeamsWP.Controls
 
       if (needsDownload)
       {
-        // This should only happen on one request at per url, since the lock() above takes care of that
+        // This should only happen on one request at per URL, since the lock() above takes care of that
         var stream = await DownloadImage();
-        if (stream != null)
-        {
-          await bitmapImage.SetSourceAsync(stream);
-        }
 
         lock (_cache)
         {
           // Download finished, notify images that we're good
-          _cache[teamsURL].MarkDownloadAsFinished(bitmapImage);
+          _cache[teamsURL].FinalizeDownload(stream);
         }
       }
 
       UpdateImage(bitmapImage);
     }
 
-    private void OnUpdateImage(object s, EventArgs e)
+    private void OnUpdateImage(object s, BitmapImageStatusArgs e)
     {
-      UpdateImage(s as BitmapImage);
+      UpdateImage(e.BitmapImage);
     }
 
     private void UpdateImage(BitmapImage bitmapImage)
@@ -186,15 +199,28 @@ namespace TeamsWP.Controls
       }
     }
 
-    private class BitmapImageStatus
+    private class BitmapImageStatusArgs
     {
       public BitmapImage BitmapImage;
+    }
+
+    private class BitmapImageStatus
+    {
+      public string URL;
+      public BitmapImage BitmapImage;
       public bool IsDownloadFinished;
-      public event EventHandler DownloadFinished;
-      public void MarkDownloadAsFinished(BitmapImage bitmapImage)
+      public event EventHandler<BitmapImageStatusArgs> DownloadFinished;
+      public void FinalizeDownload(IRandomAccessStream stream)
       {
         IsDownloadFinished = true;
-        DownloadFinished?.Invoke(bitmapImage, EventArgs.Empty);
+
+        if (stream != null)
+        {
+          BitmapImage.SetSource(stream);
+          DownloadFinished?.Invoke(BitmapImage, new BitmapImageStatusArgs() {
+            BitmapImage = BitmapImage
+          });
+        }
       }
     }
   }
