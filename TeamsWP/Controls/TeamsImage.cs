@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -67,6 +68,8 @@ namespace TeamsWP.Controls
       await RenderDocument();
     }
 
+    private static Dictionary<string, BitmapImage> _cache = new Dictionary<string, BitmapImage>();
+
     private async Task RenderDocument()
     {
       if (_image == null)
@@ -79,43 +82,63 @@ namespace TeamsWP.Controls
         return;
       }
 
-      var app = (App)Application.Current;
-
-      var http = new API.HTTP();
-
-      var headers = new NameValueCollection();
-      headers["Authorization"] = $"Bearer {app.Client.CurrentAccountSettings.Credentials.AccessToken}";
-
-      MemoryStream responseStream = null;
-      try
+      BitmapImage bitmapImage = null;
+      bool needsDownload = false;
+      lock (_cache)
       {
-        responseStream = await http.DoHTTPRequestStreamAsync(TeamsURL, new byte[] { }, headers, "GET");
+        if (_cache.ContainsKey(TeamsURL))
+        {
+          bitmapImage = _cache[TeamsURL];
+        }
+        else
+        {
+          bitmapImage = new BitmapImage();
+          needsDownload = true;
+          _cache.Add(TeamsURL, bitmapImage);
+        }
       }
-      catch (WebException ex)
+      if (needsDownload)
       {
-        var error = ex.Response != null ? await new StreamReader(ex.Response.GetResponseStream()).ReadToEndAsync() : ex.ToString();
-        return;
-      }
+        var app = (App)Application.Current;
 
-      if (responseStream == null)
-      {
-        return;
-      }
+        var http = new API.HTTP();
 
-      var bitmapImage = new BitmapImage();
-      bitmapImage.SetSource(responseStream.AsRandomAccessStream());
+        var headers = new NameValueCollection();
+        headers["Authorization"] = $"Bearer {app.Client.CurrentAccountSettings.Credentials.AccessToken}";
+
+        MemoryStream responseStream = null;
+        try
+        {
+          responseStream = await http.DoHTTPRequestStreamAsync(TeamsURL, new byte[] { }, headers, "GET");
+        }
+        catch (WebException ex)
+        {
+          //var error = ex.Response != null ? await new StreamReader(ex.Response.GetResponseStream()).ReadToEndAsync() : ex.ToString();
+          return;
+        }
+
+        if (responseStream == null)
+        {
+          return;
+        }
+
+        bitmapImage.SetSource(responseStream.AsRandomAccessStream());
+      }
 
       _image.Source = bitmapImage;
 
-      if (Width == 0 && Height != 0)
+      if (bitmapImage.PixelWidth != 0 && bitmapImage.PixelHeight != 0)
       {
-        _image.Width = Width = bitmapImage.PixelWidth / (bitmapImage.PixelHeight / Height);
-        _image.Height = Height;
-      }
-      else if (Width != 0 && Height == 0)
-      {
-        _image.Width = Width;
-        _image.Height = Height = bitmapImage.PixelHeight / (bitmapImage.PixelWidth / Width);
+        if (Width == 0 && Height != 0)
+        {
+          _image.Width = Width = bitmapImage.PixelWidth / (bitmapImage.PixelHeight / Height);
+          _image.Height = Height;
+        }
+        else if (Width != 0 && Height == 0)
+        {
+          _image.Width = Width;
+          _image.Height = Height = bitmapImage.PixelHeight / (bitmapImage.PixelWidth / Width);
+        }
       }
     }
   }
