@@ -85,7 +85,7 @@ namespace TeamsWP.Inlays
         {
           ID = message?.id,
           Sender = message?.from?.user?.displayName ?? "[unknown]",
-          SenderImageURL = _app.Client.GraphEndpointRoot + message?.from?.user?.AvatarURL,
+          SenderImageURL = message?.from?.user?.AvatarURL == null ? string.Empty : _app.Client.GraphEndpointRoot + message?.from?.user?.AvatarURL,
           Text = message?.body?.content ?? "[unknown]",
           Timestamp = message?.createdDateTime
         });
