@@ -121,6 +121,7 @@ namespace TeamsWP.Inlays
       if (response != null)
       {
         MessageText = string.Empty;
+        OnPropertyChanged(nameof(MessageText));
         AddNewMessages(new List<API.Commands.Types.Message>() { response });
       }
     }
