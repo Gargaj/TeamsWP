@@ -70,7 +70,7 @@ namespace TeamsWP.Controls
       await RenderDocument();
     }
 
-    private async Task<IRandomAccessStream> DownloadImage()
+    private async Task<IRandomAccessStream> DownloadImage(string url)
     {
       var app = (App)Application.Current;
 
@@ -82,11 +82,12 @@ namespace TeamsWP.Controls
       MemoryStream responseStream = null;
       try
       {
-        responseStream = await http.DoHTTPRequestStreamAsync(TeamsURL, new byte[] { }, headers, "GET");
+        responseStream = await http.DoHTTPRequestStreamAsync(url, new byte[] { }, headers, "GET");
       }
-      catch (WebException)
+      catch (WebException ex)
       {
-        //var error = ex.Response != null ? await new StreamReader(ex.Response.GetResponseStream()).ReadToEndAsync() : ex.ToString();
+        var error = ex.Response != null ? await new StreamReader(ex.Response.GetResponseStream()).ReadToEndAsync() : ex.ToString();
+        System.Diagnostics.Debug.WriteLine($"[TeamsImage Error]\nURL: {url}\nERROR: {ex.Status} ({(int)ex.Status}): {error}");
         return null;
       }
 
@@ -158,7 +159,7 @@ namespace TeamsWP.Controls
       if (needsDownload)
       {
         // This should only happen on one request at per URL, since the lock() above takes care of that
-        var stream = await DownloadImage();
+        var stream = await DownloadImage(teamsURL);
 
         lock (_cache)
         {
