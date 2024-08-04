@@ -207,6 +207,7 @@ namespace TeamsWP.API
       {
         var webResponse = ex.Response as HttpWebResponse;
         var error = ex.Response != null ? await new StreamReader(ex.Response.GetResponseStream()).ReadToEndAsync() : ex.ToString();
+        System.Diagnostics.Debug.WriteLine($"ERROR {webResponse.StatusCode}: {error}");
         if (ex?.Response?.Headers != null && ex.Response.Headers["content-type"].ToLower().StartsWith("application/json"))
         {
           var jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(error) as Newtonsoft.Json.Linq.JObject;

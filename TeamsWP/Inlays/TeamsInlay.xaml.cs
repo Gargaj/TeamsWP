@@ -45,6 +45,7 @@ namespace TeamsWP.Inlays
         foreach (var teamData in responseTeams.value)
         {
           var team = new Team() {
+            ID = teamData.id,
             Name = teamData.displayName
           };
 
@@ -55,6 +56,8 @@ namespace TeamsWP.Inlays
           if (responseTeam != null)
           {
             team.Channels = responseTeam.value.Select(s => new Channel() {
+              ID = s.id,
+              TeamID = teamData.id,
               Name = s.displayName
             }).ToList();
           }
@@ -67,14 +70,34 @@ namespace TeamsWP.Inlays
       _mainPage?.EndLoading();
     }
 
+    private async void TeamChannel_ItemClick(object sender, ItemClickEventArgs e)
+    {
+      var channel = e.ClickedItem as Channel;
+      if (channel != null)
+      {
+        /*
+         Missing scope permissions on the request. API requires one of 'ChannelMessage.Read.All'
+
+        var responseMessages = await _mainPage.Get<API.Commands.Channel.ListChannelMessages.Response>(new API.Commands.Channel.ListChannelMessages
+        {
+          channelId = channel.ID,
+          teamId = channel.TeamID
+        });
+        */
+      }
+    }
+
     public class Team
     {
+      public string ID { get; set; }
       public string Name { get; set; }
       public List<Channel> Channels { get; set; }
     }
 
     public class Channel
     {
+      public string ID { get; set; }
+      public string TeamID { get; set; }
       public string Name { get; set; }
     }
 

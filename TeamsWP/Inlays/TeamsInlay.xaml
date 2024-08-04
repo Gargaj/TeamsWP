@@ -22,7 +22,7 @@
           </StackPanel>
 
           <!-- channel list -->
-          <ListView ItemsSource="{Binding Channels}" HorizontalContentAlignment="Stretch">
+          <ListView ItemsSource="{Binding Channels}" HorizontalContentAlignment="Stretch" IsItemClickEnabled="True" ItemClick="TeamChannel_ItemClick">
             <ListView.ItemTemplate>
               <DataTemplate>
                 <TextBlock Text="{Binding Name}"/>
