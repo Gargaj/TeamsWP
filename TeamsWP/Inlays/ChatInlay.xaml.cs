@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using TeamsWP.API.Commands;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -96,8 +97,7 @@ namespace TeamsWP.Inlays
           ID = message?.id,
           Sender = message?.from?.user?.displayName ?? "[unknown]",
           SenderImageURL = message?.from?.user?.AvatarURL == null ? string.Empty : _app.Client.GraphEndpointRoot + message?.from?.user?.AvatarURL,
-          Text = message?.body?.content ?? "[unknown]",
-          Timestamp = message?.createdDateTime
+          MessageData = message
         });
       }
 
@@ -132,9 +132,10 @@ namespace TeamsWP.Inlays
       public string Sender { get; set; }
       public string SenderImageURL { get; set; }
       public string TimestampString => Timestamp.HasValue ? (Timestamp.Value.Date == DateTime.Now.Date ? Timestamp.Value.ToString("HH:mm") : Timestamp.Value.ToString("yyyy-MM-dd HH:mm")) : string.Empty;
-      public DateTime? Timestamp { get; set; }
-      public string Text { get; set; }
-      public RichTextControls.Generators.IHtmlXamlGenerator HTMLGenerator { get { return new TeamsHTMLGenerator(Text); } }
+      public DateTime? Timestamp => MessageData?.createdDateTime;
+      public string Text => MessageData?.body?.content ?? "[unknown]";
+      public RichTextControls.Generators.IHtmlXamlGenerator HTMLGenerator { get { return new TeamsHTMLGenerator(MessageData); } }
+      public Types.Message MessageData { get; internal set; }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

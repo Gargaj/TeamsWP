@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System.Linq;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
 
@@ -6,9 +7,12 @@ namespace TeamsWP
 {
   public class TeamsHTMLGenerator : RichTextControls.Generators.HtmlXamlGenerator
   {
-    public TeamsHTMLGenerator(string html) 
-      : base(html)
+    private API.Commands.Types.Message _messageData;
+
+    public TeamsHTMLGenerator(API.Commands.Types.Message messageData) 
+      : base(messageData?.body?.content)
     {
+      _messageData = messageData;
     }
 
     public TeamsHTMLGenerator(AngleSharp.Dom.Html.IHtmlDocument document) 
@@ -61,11 +65,53 @@ namespace TeamsWP
       {
         case "ATTACHMENT":
           {
-            // TODO
+            var element = node as AngleSharp.Dom.IElement;
+            if (element != null)
+            {
+              var attachment = _messageData.attachments.FirstOrDefault(s => s.id == element.Id);
+              switch (attachment?.contentType)
+              {
+                case "messageReference":
+                  {
+                    var messageObject = Newtonsoft.Json.JsonConvert.DeserializeObject<MessageReference>(attachment.content);
+
+                    var brush = (Windows.UI.Xaml.Media.Brush)Application.Current.Resources["ButtonBorderThemeBrush"];
+                    var background = Application.Current.Resources["TextBoxButtonForegroundThemeBrush"] as Windows.UI.Xaml.Media.SolidColorBrush;
+                    background.Color = new Windows.UI.Color() { R = background.Color.R, G = background.Color.G, B = background.Color.B, A = 10 };
+                    var border = new Border()
+                    {
+                      BorderBrush = brush,
+                      BorderThickness = new Thickness(3, 1, 1, 1),
+                      Background = background,
+                      Padding = new Thickness(3),
+                    };
+
+                    var stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
+                    border.Child = stackPanel;
+
+                    stackPanel.Children.Add(new TextBlock() { Text = messageObject.messageSender.user.displayName, FontSize = 12 });
+                    stackPanel.Children.Add(new TextBlock() { Text = messageObject.messagePreview });
+
+                    return border;
+                  }
+                  break;
+                case "application/vnd.microsoft.card.adaptive":
+                  {
+                  }
+                  break;
+              }
+            }
           }
           break;
       }
       return base.GenerateUIElementForNode(node, elements);
+    }
+
+    public class MessageReference
+    {
+      public string messageId;
+      public string messagePreview;
+      public API.Commands.Types.From messageSender;
     }
   }
 }
