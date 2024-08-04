@@ -135,7 +135,22 @@ namespace TeamsWP.Inlays
       public DateTime? Timestamp => MessageData?.createdDateTime;
       public string Text => MessageData?.body?.content ?? "[unknown]";
       public RichTextControls.Generators.IHtmlXamlGenerator HTMLGenerator { get { return new TeamsHTMLGenerator(MessageData); } }
+      public IEnumerable<GroupedReaction> Reactions
+      {
+        get
+        {
+          var groupedReactions = MessageData.reactions.GroupBy(s => s.reactionType);
+          return groupedReactions.Select(s => new GroupedReaction() { Reaction = s.Key, Count = s.Count() });
+        }
+      }
+
       public Types.Message MessageData { get; internal set; }
+    }
+
+    public class GroupedReaction
+    {
+      public string Reaction { get; set; }
+      public int Count { get; set; }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;

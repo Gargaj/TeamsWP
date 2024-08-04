@@ -39,6 +39,31 @@
             <richText:HtmlTextBlock Html="{Binding Text}" CustomGenerator="{Binding HTMLGenerator}" Margin="10,0,0,0"/>
             
             <!-- TODO: reactions-->
+            <ListView ItemsSource="{Binding Reactions}" Margin="8,0,0,0">
+              <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+              </ListView.ItemsPanel>
+              <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                  <Setter Property="Margin" Value="0,3,8,0"/>
+                  <Setter Property="Padding" Value="0"/>
+                  <Setter Property="MinHeight" Value="0"/>
+                  <Setter Property="MinWidth" Value="0"/>
+                </Style>
+              </ListView.ItemContainerStyle>
+              <ListView.ItemTemplate>
+                <DataTemplate>
+                  <Border BorderThickness="1" BorderBrush="{ThemeResource ListBoxBorderThemeBrush}" Background="{ThemeResource ListBoxBackgroundThemeBrush}" Margin="0" Padding="3,1" CornerRadius="5">
+                    <StackPanel Orientation="Horizontal">
+                      <TextBlock Text="{Binding Reaction}" FontSize="10" Margin="0,0,3,0"/>
+                      <TextBlock Text="{Binding Count}" FontSize="10"/>
+                    </StackPanel>
+                  </Border>
+                </DataTemplate>
+              </ListView.ItemTemplate>
+            </ListView>
             
           </StackPanel>
         </DataTemplate>
