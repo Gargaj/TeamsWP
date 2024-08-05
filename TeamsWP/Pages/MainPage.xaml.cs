@@ -41,6 +41,8 @@ namespace TeamsWP.Pages
     {
       StartLoading();
 
+      await API.Emoji.Load();
+
       _currentUserInfo = await Get<API.Commands.User.Me.Response>(new API.Commands.User.Me());
 
       EndLoading();

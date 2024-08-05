@@ -63,6 +63,10 @@ namespace TeamsWP
     {
       switch (node.NodeName)
       {
+        case "SYSTEMEVENTMESSAGE":
+          {
+          }
+          break;
         case "ATTACHMENT":
           {
             var element = node as AngleSharp.Dom.IElement;

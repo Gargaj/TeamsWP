@@ -130,6 +130,7 @@
     <Compile Include="Commands\Types.cs" />
     <Compile Include="Commands\User\JoinedTeams.cs" />
     <Compile Include="Commands\User\Me.cs" />
+    <Compile Include="Emoji.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="HTTP.cs" />
     <Compile Include="ICommand.cs" />

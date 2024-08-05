@@ -140,7 +140,10 @@ namespace TeamsWP.Inlays
         get
         {
           var groupedReactions = MessageData.reactions.GroupBy(s => s.reactionType);
-          return groupedReactions.Select(s => new GroupedReaction() { Reaction = s.Key, Count = s.Count() });
+          return groupedReactions.Select(s => new GroupedReaction() {
+            Reaction = API.Emoji.Emoticons.ContainsKey(s.Key) ? API.Emoji.Emoticons[s.Key].unicode : s.Key,
+            Count = s.Count()
+          });
         }
       }
 

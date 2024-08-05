@@ -291,7 +291,7 @@ namespace TeamsWP.API
       CurrentAccountSettings.Credentials.AccessToken = jsonObj.GetValue("access_token").ToString();
       CurrentAccountSettings.Credentials.RefreshToken = jsonObj.GetValue("refresh_token").ToString();
 
-      return true;
+      return await Settings.WriteSettings();
     }
 
     private string SerializeInputToQueryString(ICommand input)
