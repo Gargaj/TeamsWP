@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -20,11 +22,98 @@ namespace TeamsWP
     {
     }
 
+    public override UIElement Generate()
+    {
+      var result = base.Generate();
+
+      Prune(result);
+
+      return result;
+    }
+
+    private void Prune(UIElement element)
+    {
+      var panel = element as Panel;
+      if (panel != null)
+      {
+        foreach(var item in panel.Children)
+        {
+          Prune(item);
+        }
+      }
+
+      var richTextBlock = element as RichTextBlock;
+      if (richTextBlock != null)
+      {
+        var toDelete = new List<Block>();
+        foreach (var item in richTextBlock.Blocks)
+        {
+          if (PruneBlock(item))
+          {
+            toDelete.Add(item);
+          }
+        }
+        foreach (var i in toDelete)
+        {
+          richTextBlock.Blocks.Remove(i);
+        }
+      }
+    }
+
+    private bool PruneBlock(Block block)
+    {
+      var paragraph = block as Paragraph;
+      if (paragraph != null)
+      {
+        PruneInlines(paragraph.Inlines);
+        if (paragraph.Inlines.Count == 0)
+        {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    private void PruneInlines(InlineCollection inlines)
+    {
+      var toDelete = new List<Inline>();
+      foreach (var item in inlines)
+      {
+        if (PruneInline(item))
+        {
+          toDelete.Add(item);
+        }
+      }
+      foreach (var i in toDelete)
+      {
+        inlines.Remove(i);
+      }
+    }
+
+    private bool PruneInline(Inline inline)
+    {
+      var span = inline as Span;
+      if (span != null)
+      {
+        PruneInlines(span.Inlines);
+      }
+
+      var run = inline as Run;
+      if (run != null)
+      {
+        run.Text = run.Text.Trim();
+        return string.IsNullOrEmpty(run.Text);
+      }
+
+      return false;
+    }
+
     public override string PrepareRawHtml(string rawHtml)
     {
       var str = base.PrepareRawHtml(rawHtml);
 
       str = str.Replace("<p></p>\n", "");
+      str = str.Replace("<p></p>", "");
 
       return str;
     }
