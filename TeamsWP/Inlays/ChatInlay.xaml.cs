@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using TeamsWP.API.Commands;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -108,6 +107,10 @@ namespace TeamsWP.Inlays
 
     private async void Send_Click(object sender, RoutedEventArgs e)
     {
+      if (string.IsNullOrEmpty(MessageText))
+      {
+        return;
+      }
       var response = await _mainPage.Post<API.Commands.Chat.SendChatMessage.Response>(new API.Commands.Chat.SendChatMessage
       {
         id = ID,
@@ -147,7 +150,7 @@ namespace TeamsWP.Inlays
         }
       }
 
-      public Types.Message MessageData { get; internal set; }
+      public API.Commands.Types.Message MessageData { get; internal set; }
     }
 
     public class GroupedReaction
