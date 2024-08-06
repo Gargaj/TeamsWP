@@ -90,7 +90,7 @@ namespace TeamsWP.Inlays
 
       foreach (var message in newMessages)
       {
-        var insertionItem = Messages.FirstOrDefault(s => s.Timestamp > message?.createdDateTime);
+        var insertionItem = Messages.FirstOrDefault(s => s.Timestamp > message?.createdDateTime.ToLocalTime());
         var idx = Messages.IndexOf(insertionItem);
         Messages.Insert(idx < 0 ? Messages.Count : idx, new Message()
         {
@@ -132,7 +132,7 @@ namespace TeamsWP.Inlays
       public string Sender { get; set; }
       public string SenderImageURL { get; set; }
       public string TimestampString => Timestamp.HasValue ? (Timestamp.Value.Date == DateTime.Now.Date ? Timestamp.Value.ToString("HH:mm") : Timestamp.Value.ToString("yyyy-MM-dd HH:mm")) : string.Empty;
-      public DateTime? Timestamp => MessageData?.createdDateTime;
+      public DateTime? Timestamp => MessageData?.createdDateTime.ToLocalTime();
       public string Text => MessageData?.body?.content ?? "[unknown]";
       public RichTextControls.Generators.IHtmlXamlGenerator HTMLGenerator { get { return new TeamsHTMLGenerator(MessageData); } }
       public IEnumerable<GroupedReaction> Reactions
