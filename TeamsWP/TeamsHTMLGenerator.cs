@@ -20,6 +20,15 @@ namespace TeamsWP
     {
     }
 
+    public override string PrepareRawHtml(string rawHtml)
+    {
+      var str = base.PrepareRawHtml(rawHtml);
+
+      str = str.Replace("<p></p>\n", "");
+
+      return str;
+    }
+
     protected override UIElement GenerateImage(AngleSharp.Dom.Html.IHtmlImageElement node)
     {
       if (node.Source.StartsWith("https://graph.microsoft.com"))
