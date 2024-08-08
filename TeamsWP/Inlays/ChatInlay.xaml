@@ -26,7 +26,7 @@
             <!-- sender -->
 
             <StackPanel Orientation="Horizontal">
-              <twc:TeamsImage TeamsURL="{Binding SenderImageURL}" Width="16" Height="16" Margin="0,0,5,0"/>
+              <twc:TeamsImage TeamsURL="{Binding SenderImageURL}" Width="16" Height="16" Margin="0,0,5,0" FallbackText="{Binding Sender}"/>
               <TextBlock>
                 <Run Text="{Binding Sender}" FontWeight="Bold"/>
                 <Run Text="{Binding TimestampString}" FontSize="10"/>

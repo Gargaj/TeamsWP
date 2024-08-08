@@ -8,7 +8,10 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="controls:TeamsImage">
-          <Image x:Name="Image" />
+          <Canvas>
+            <Image x:Name="Image" />
+            <Canvas Width="100" Height="100" x:Name="RenderCanvas" Margin="1000"/>
+          </Canvas>
         </ControlTemplate>
       </Setter.Value>
     </Setter>

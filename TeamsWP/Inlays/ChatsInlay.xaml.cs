@@ -78,7 +78,10 @@ namespace TeamsWP.Inlays
           {
             return App.Client.GraphEndpointRoot + FirstChatPartner.AvatarURL;
           }
-          return string.Empty;
+          else
+          {
+            return $"teams://chats/{ChatData.id}/$photo"; // fake URL for now
+          }
         }
       }
       public API.Commands.Types.Chat.Member FirstChatPartner => ChatPartners.FirstOrDefault();
