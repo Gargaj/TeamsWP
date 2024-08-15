@@ -209,9 +209,9 @@ namespace TeamsWP.Controls
         FontWeight = Windows.UI.Text.FontWeights.Bold,
         FontSize = 50,
         Margin = new Thickness(0, 25, 0, 0),
-        Foreground = HSLBrush(hue, 0.5f, 0.2f),
+        Foreground = HSLBrush(hue, 0.5f, 0.4f),
       };
-      _renderCanvas.Background = HSLBrush(hue, 0.5f, 0.8f);
+      _renderCanvas.Background = HSLBrush(hue, 0.2f, 0.9f);
       _renderCanvas.Children.Add(border);
 
       var renderbmp = new RenderTargetBitmap();
