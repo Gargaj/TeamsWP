@@ -53,8 +53,18 @@ namespace TeamsWP.Inlays
       {
         id = ID
       });
-      ChatName = !string.IsNullOrEmpty(responseChatInfo.topic) ? responseChatInfo.topic : string.Join(", ", responseChatInfo.members.Where(m => m.userId != _mainPage.CurrentUserInfo.id).Select(m => m.displayName));
-      OnPropertyChanged(nameof(ChatName));
+      if (responseChatInfo != null)
+      {
+        if (string.IsNullOrEmpty(responseChatInfo.topic))
+        {
+          ChatName = responseChatInfo.topic;
+        }
+        else if (responseChatInfo.members != null)
+        {
+          ChatName = string.Join(", ", responseChatInfo.members.Where(m => m.userId != _mainPage.CurrentUserInfo.id).Select(m => m.displayName));
+        }
+        OnPropertyChanged(nameof(ChatName));
+      }
 
       _mainPage?.EndLoading();
 
