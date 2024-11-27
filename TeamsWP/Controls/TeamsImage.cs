@@ -191,7 +191,7 @@ namespace TeamsWP.Controls
     private async Task<IRandomAccessStream> GenerateTempImage(string fallbackText)
     {
       var hue = (uint)(fallbackText.GetHashCode()) / (float)uint.MaxValue;
-      var firstLetters = string.Join("", fallbackText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Substring(0, 1).ToUpper()).Where(s => char.IsLetter(s[0]))).Substring(0, 2);
+      var firstLetters = string.Join("", fallbackText.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Substring(0, 1).ToUpper()).Where(s => char.IsLetter(s[0])).Take(2));
       
       var border = new Border()
       {
@@ -215,7 +215,13 @@ namespace TeamsWP.Controls
       _renderCanvas.Children.Add(border);
 
       var renderbmp = new RenderTargetBitmap();
-      await renderbmp.RenderAsync(_renderCanvas, (int)_renderCanvas.Width, (int)_renderCanvas.Height);
+      try
+      {
+        await renderbmp.RenderAsync(_renderCanvas, (int)_renderCanvas.Width, (int)_renderCanvas.Height);
+      }
+      catch (Exception)
+      {
+      }
       _renderCanvas.Children.Clear();
 
       var stream = new InMemoryRandomAccessStream();
