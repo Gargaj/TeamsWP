@@ -49,6 +49,21 @@ namespace TeamsWP.API.Commands
       public string mentionText;
       public From mentioned;
     }
+    public class Drive
+    {
+      public string id;
+      public string name;
+      public string description;
+      public string webUrl;
+    }
+    public class DriveItem
+    {
+      public string id;
+      public string name;
+      public ulong size;
+      public string webDavUrl;
+      public string webUrl;
+    }
     public class Message
     {
       public string id;

@@ -176,6 +176,12 @@ namespace TeamsWP.API
       headers["Content-Type"] = "application/json";
       headers["Authorization"] = $"Bearer {CurrentAccountSettings.Credentials.AccessToken}";
 
+      var rawPost = input as IRawPost;
+      if (rawPost != null)
+      {
+        headers["Content-Type"] = rawPost.MimeType;
+      }
+
       var url = $"{GraphEndpointRoot}/{input.Endpoint}";
       string responseJson = null;
       string bodyJson = string.Empty;
@@ -199,6 +205,14 @@ namespace TeamsWP.API
                 bodyJson = string.Empty;
               }
               responseJson = await http.DoPOSTRequestAsync(url, bodyJson, headers);
+            }
+            break;
+          default:
+            {
+              if (rawPost != null)
+              {
+                responseJson = await http.DoHTTPRequestAsync(url, rawPost.PostData, headers, method);
+              }
             }
             break;
         }

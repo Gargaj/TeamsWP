@@ -11,8 +11,8 @@ namespace TeamsWP
   {
     private API.Commands.Types.Message _messageData;
 
-    public TeamsHTMLGenerator(API.Commands.Types.Message messageData) 
-      : base(messageData?.body?.content)
+    public TeamsHTMLGenerator(API.Commands.Types.Message messageData, string html) 
+      : base(html)
     {
       _messageData = messageData;
     }

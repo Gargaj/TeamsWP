@@ -127,6 +127,10 @@
     <Compile Include="Commands\Chat\SendChatMessage.cs" />
     <Compile Include="Commands\Chat\ListChatMessages.cs" />
     <Compile Include="Commands\Chat\ListChats.cs" />
+    <Compile Include="Commands\Drive\GetDriveRootUser.cs" />
+    <Compile Include="Commands\Drive\ListDrives.cs" />
+    <Compile Include="Commands\Drive\GetDriveRoot.cs" />
+    <Compile Include="Commands\Drive\Upload.cs" />
     <Compile Include="Commands\Types.cs" />
     <Compile Include="Commands\User\JoinedTeams.cs" />
     <Compile Include="Commands\User\Me.cs" />

@@ -85,7 +85,7 @@ namespace TeamsWP.Inlays
         }
       }
       public API.Commands.Types.Chat.Member FirstChatPartner => ChatPartners.FirstOrDefault();
-      public IEnumerable<API.Commands.Types.Chat.Member> ChatPartners => ChatData.members.Where(m => m.userId != CurrentUserInfo.id);
+      public IEnumerable<API.Commands.Types.Chat.Member> ChatPartners => ChatData.members.Where(m => m.userId != CurrentUserInfo?.id);
       public API.Commands.User.Me.Response CurrentUserInfo { get; set; }
       public API.Commands.Types.Chat ChatData { get; set; }
     }

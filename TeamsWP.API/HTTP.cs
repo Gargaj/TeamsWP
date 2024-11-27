@@ -53,7 +53,7 @@ namespace TeamsWP.API
       }
       _httpWReq.CookieContainer = _cookieContainer;
 
-      if (method == "POST")
+      if (data != null && data.Length > 0)
       {
         using (var stream = await _httpWReq.GetRequestStreamAsync())
         {
