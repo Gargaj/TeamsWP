@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,14 +9,33 @@ namespace TeamsWP.API
 {
   public class Emoji
   {
+    private static readonly string EmojiFile = "emoji.json";
     private static readonly string EmojiListURL = "https://statics.teams.cdn.office.net/evergreen-assets/personal-expressions/v1/metadata/a098bcb732fd7dd80ce11c12ad15767f/en-us.json";
     private static Dictionary<string, Emoticon> _emoticons;
 
     public static async Task Load()
     {
-      HTTP http = new HTTP();
+      string dataJson = string.Empty;
 
-      var dataJson = await http.DoGETRequestAsync(EmojiListURL);
+      var localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+      var provider = new Windows.Security.Cryptography.DataProtection.DataProtectionProvider();
+
+      var item = await localFolder.TryGetItemAsync(EmojiFile);
+      if (item == null)
+      {
+        HTTP http = new HTTP();
+        dataJson = await http.DoGETRequestAsync(EmojiListURL);
+
+        if (dataJson.Length > 0)
+        {
+          var file = await localFolder.CreateFileAsync(EmojiFile, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+          await Windows.Storage.FileIO.WriteTextAsync(file, dataJson);
+        }
+      }
+      else
+      {
+        dataJson = await Windows.Storage.FileIO.ReadTextAsync(item as Windows.Storage.IStorageFile);
+      }
 
       var data = Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(dataJson);
 
